@@ -1,8 +1,6 @@
-package model;
+package com.model;
 
 import jakarta.persistence.*;
-
-import javax.naming.Name;
 import java.util.List;
 
 @Entity
@@ -14,8 +12,8 @@ public class Enclousure {
     private Long id;
 
     @Column(unique = true,nullable = false,length = 100)//en la nbase de datos se me olvido
-            //añadirla como unica pero al tener configuradao hibernete como auto en persistence.xml
-            //ya se encara automaticamente de actualizar la columna y añadirla como unica
+            //añadirla como unica, pero al tener configuradao hibernete como auto en persistence.xml
+            //ya se encara automáticamente de actualizar la columna y añadirla como unica
     private String name;
 
     @Column(name = "Description", nullable = false,length = 1000,unique = true)
