@@ -19,7 +19,7 @@ public class EnclousureController {
     }
 
     @GetMapping
-    public List<Enclousure> enclousureList(){
+    public List<Enclousure> getAllEnclosures(){
         return enclousureRepository.findAll();
     }
 

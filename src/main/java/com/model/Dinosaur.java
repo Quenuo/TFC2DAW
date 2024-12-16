@@ -31,7 +31,51 @@ public class Dinosaur {
     private Enclousure enclosure;
 
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public String getScientificName() {
+        return scientificName;
+    }
 
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public long getEnclosure() {
+        return enclosure.getId();
+    }
+
+    public void setEnclosure(Enclousure enclosure) {
+        this.enclosure = enclosure;
+    }
 }
