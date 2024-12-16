@@ -1,7 +1,8 @@
 package com.controller;
 
-import com.Repository.GlobalRepository;
+import com.Repository.UserRepository;
 import com.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.MessageDigest;
@@ -9,15 +10,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
-
+//TODO pasar mensajes de error de autenticacion al frontend
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private GlobalRepository globalRepository;
+    private final UserRepository userRepository;
 
-    public AuthController(){
-        globalRepository=GlobalRepository.getInstance();
+    @Autowired
+    public AuthController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     //para el login
     @PostMapping("/login")//indica el tipo de solicitud(Get put post delete etc
@@ -26,7 +29,8 @@ public class AuthController {
         //spring lo convierte automaticamente en un Mapa
         String email=user.get("email");
         String password=user.get("password");
-        User userLogged= globalRepository.findUserByEmail(email);
+        User userLogged= userRepository.findByEmail(email);
+        System.out.println(userLogged);
 
         //si el usuario no es nulo(es decir si el email introducido por el usuario esta en la base de datos
         if(userLogged!=null){
@@ -56,14 +60,14 @@ public class AuthController {
         String encryptedPassword=encryptPassword(password,salt);
         User userRegist=new User(encryptedPassword,email,bytesToHex(salt),name);
 
-        List<User> userList=globalRepository.getAllUsers();
+        List<User> userList=userRepository.findAll();
         if(userList.contains(userRegist)){
             //si ya lo contiene, entonces el email no es unico por lo que tiro excepcion
             //el criterio que he usado para que un usuario sea igual a otro es tener el mismo email
 
             throw new IllegalArgumentException("¡El email ya esta registrado, logueate!");
         }
-        globalRepository.register(userRegist);
+        userRepository.save(userRegist);
 
     }
 

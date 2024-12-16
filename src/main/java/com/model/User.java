@@ -34,10 +34,6 @@ public class User {
     @Column(name = "BanExpirationDate")
     private LocalDateTime banExpirationDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Park> parkList;
-
-
     public User(){
 
     }
@@ -67,5 +63,19 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hashCode(email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                ", rol='" + rol + '\'' +
+                ", isBanned=" + isBanned +
+                ", banExpirationDate=" + banExpirationDate +
+                '}';
     }
 }

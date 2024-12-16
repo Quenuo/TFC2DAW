@@ -2,6 +2,7 @@ package com.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,9 +20,17 @@ public class Park {
     @Column(name = "Coins",nullable = false,columnDefinition = "DECIMAL(10,2)")
     private Double coin;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserId",nullable = false)
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Enclousures_Park",
+            joinColumns = @JoinColumn(name = "ParkId"),
+            inverseJoinColumns = @JoinColumn(name = "EnclousureId")
+    )
+    private List<Enclousure> enclosures;
 
     @ManyToMany
     @JoinTable(
@@ -29,7 +38,7 @@ public class Park {
             joinColumns = @JoinColumn(name = "ParkId"),
             inverseJoinColumns = @JoinColumn(name = "DinosaurId")
     )
-    private Set<Dinosaur>  dinosaurSet;
+    private List<Dinosaur>  dinosaurList;
 
 
 

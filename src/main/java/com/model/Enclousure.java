@@ -25,10 +25,47 @@ public class Enclousure {
     @Column(name = "Cost",nullable = false,columnDefinition = "DECIMAL(10,2)")
     private Double cost;
 
-    @OneToMany(mappedBy = "enclousure", cascade = CascadeType.ALL)
-    private List<Dinosaur> dinosaurList;
 
+    @ManyToMany(mappedBy = "enclosures")
+    private List<Park> parks;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
 }

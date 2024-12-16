@@ -1,5 +1,6 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,12 +26,11 @@ public class Dinosaur {
     @Column(name = "Image",nullable = false)
     private String image;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RequiredRecintoId",nullable = false)
-    private Enclousure  enclousure;
+    @ManyToOne
+    @JoinColumn(name = "RequiredRecintoId", nullable = false)
+    private Enclousure enclosure;
 
-    @ManyToMany(mappedBy = "dinosaurSet")
-    private List<Park> parkList;
+
 
 
 
