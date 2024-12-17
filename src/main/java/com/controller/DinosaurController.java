@@ -1,6 +1,6 @@
 package com.controller;
 
-import com.Repository.DinosaurRepository;
+import com.repository.DinosaurRepository;
 import com.model.Dinosaur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

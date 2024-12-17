@@ -1,6 +1,6 @@
 package com.controller;
 
-import com.Repository.EmergencyRepository;
+import com.repository.EmergencyRepository;
 import com.model.Emergency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

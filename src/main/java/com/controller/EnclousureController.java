@@ -1,6 +1,6 @@
 package com.controller;
 
-import com.Repository.EnclousureRepository;
+import com.repository.EnclousureRepository;
 import com.model.Enclousure;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
