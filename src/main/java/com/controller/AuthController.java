@@ -1,36 +1,41 @@
 package com.controller;
 
-import com.Repository.UserRepository;
+import com.repository.UserRepository;
 import com.model.User;
+import com.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 //TODO pasar mensajes de error de autenticacion al frontend
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthController(UserRepository userRepository) {
+    public AuthController(UserRepository userRepository,JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil=jwtUtil;
     }
 
 
     //para el login
     @PostMapping("/login")//indica el tipo de solicitud(Get put post delete etc
-    public User login(@RequestBody Map<String,String> user){
+    public Map<String,Object> login(@RequestBody Map<String,String> user){
         //Mi frontend en el auth service envia los datos en formato json
         //spring lo convierte automaticamente en un Mapa
         String email=user.get("email");
         String password=user.get("password");
         User userLogged= userRepository.findByEmail(email);
-        System.out.println(userLogged);
 
         //si el usuario no es nulo(es decir si el email introducido por el usuario esta en la base de datos
         if(userLogged!=null){
@@ -46,8 +51,15 @@ public class AuthController {
             throw new RuntimeException("No se encontró el email en la base de datos ");
         }
 
+        String token= jwtUtil.generateToken(userLogged.getId().toString());
 
-        return  userLogged;
+        Map<String, Object> response=new HashMap<>();
+        response.put("user",userLogged);
+        response.put("token",token);
+
+
+
+        return  response;
 
     }
     //para registrarme
