@@ -20,7 +20,7 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwtKeyExpiration}")
-    private String keyExpiration;
+    private long keyExpiration;
 
     private Key key;
 
@@ -43,7 +43,7 @@ public class JwtUtil {
 
     public String validateToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
