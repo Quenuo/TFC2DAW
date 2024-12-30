@@ -8,6 +8,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class JwtUtil {
     @Value("${jwtKeyExpiration}")
     private long keyExpiration;
 
-    private Key key;
+    private SecretKey key;
 
     @PostConstruct
     public void init() {
@@ -37,13 +38,13 @@ public class JwtUtil {
                 .subject(userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + keyExpiration))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key)
                 .compact();
     }
 
     public String validateToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(key)
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
