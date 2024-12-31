@@ -12,7 +12,6 @@ import org.springframework.http.HttpMethod;
 
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 
 //La uso para validar los tokens enviado por los usuarios desde el frontend,tambien para extraer el id del token  , y almacenarlo
@@ -35,7 +34,7 @@ public class JwtFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
         String path = httpRequest.getRequestURI();
 
-        //para que permita las solicitudes options
+
         if (HttpMethod.OPTIONS.matches(httpRequest.getMethod())) {
             chain.doFilter(request, response);
             return;
