@@ -40,17 +40,24 @@ public class AuthController {
         User userLogged= userRepository.findByEmail(email);
 
         //si el usuario no es nulo(es decir si el email introducido por el usuario esta en la base de datos
-        if(userLogged!=null){
-            String savedEncryptedPassword=userLogged.getPassword();
-            String savedSalt=userLogged.getSalt();
-            String passwordEncrypted=this.userService.encryptPassword(password,hexToBytes(savedSalt));//Esto es la contraseña
-            //que ha introducido el usuario y luego las comparo si no son las mismas ,tiro excepcion
-            if(!savedEncryptedPassword.equals(passwordEncrypted)){
-                throw new IllegalArgumentException("Email o contraseña incorrectos.");
-            }
-
-        }else{
+        if(userLogged==null){
             throw new RuntimeException("No se encontró el email en la base de datos ");
+        }
+
+        //De momento no podra iniciar sesion
+        //mas adelante a lo mejor pondre una pantalla para los usuario que hayan sido baneados de manera temporal
+        //y que no pueda iniciar sesion para los usuario que hayan sido baneados para siempre
+        //con esto de momento los baneos ya son permantes debido a que no actualizo e isbannaded=false
+        if (userLogged.getBanned() != null && userLogged.getBanned()) {
+            throw new IllegalArgumentException("El usuario está baneado y no puede iniciar sesión.");
+        }
+
+        String savedEncryptedPassword=userLogged.getPassword();
+        String savedSalt=userLogged.getSalt();
+        String passwordEncrypted=this.userService.encryptPassword(password,hexToBytes(savedSalt));//Esto es la contraseña
+        //que ha introducido el usuario y luego las comparo si no son las mismas ,tiro excepcion
+        if(!savedEncryptedPassword.equals(passwordEncrypted)){
+            throw new IllegalArgumentException("Email o contraseña incorrectos.");
         }
 
         String token= jwtUtil.generateToken(userLogged.getId().toString());
