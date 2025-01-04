@@ -69,6 +69,8 @@ public class ParkController {
             throw new RuntimeException(e);
         }
     }
+
+
     @PutMapping("/create")
     public ResponseEntity<Map<String,String>> createParkName(@RequestBody Map<String, String> requestBody, HttpServletRequest httpServletRequest) {
         String userId = (String) httpServletRequest.getAttribute("userId");

@@ -54,7 +54,7 @@ public class AuthController {
 
         String savedEncryptedPassword=userLogged.getPassword();
         String savedSalt=userLogged.getSalt();
-        String passwordEncrypted=this.userService.encryptPassword(password,hexToBytes(savedSalt));//Esto es la contraseña
+        String passwordEncrypted=this.userService.encryptPassword(password,userService.hexToBytes(savedSalt));//Esto es la contraseña
         //que ha introducido el usuario y luego las comparo si no son las mismas ,tiro excepcion
         if(!savedEncryptedPassword.equals(passwordEncrypted)){
             throw new IllegalArgumentException("Email o contraseña incorrectos.");
@@ -97,15 +97,7 @@ public class AuthController {
 
     }
 
-    //Es porque los algoritmos de cifrado(como el sha que uso) se representa en formato hexadecimal.
-    private byte[] hexToBytes(String hex) {
-        int len = hex.length();
-        byte[] bytes = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            bytes[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
-        }
-        return bytes;
-    }
+
+
 
 }

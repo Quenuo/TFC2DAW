@@ -34,6 +34,9 @@ public class User {
     @Column(name = "BanExpirationDate")
     private LocalDateTime banExpirationDate;
 
+    @Column()
+    private String banReason;
+
     public User(){
 
     }
@@ -73,12 +76,32 @@ public class User {
         this.password = password;
     }
 
+    public String getBanReason() {
+        return banReason;
+    }
+
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
+    }
+
     public String getPassword(){
         return password;
     }
 
+    public Boolean getBanned() {
+        return isBanned;
+    }
+
     public String getSalt(){
         return salt;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     @Override

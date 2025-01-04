@@ -62,4 +62,65 @@ public class UserService {
         return hexString.toString();
     }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+    }
+
+    public Park getParkByUser(User user) {
+        return parkRepository.findByUser(user);
+    }
+
+    public User updateParkName(Long userId, String parkName) {
+        User user = getUserById(userId);
+        Park park = getParkByUser(user);
+        if (park != null) {
+            park.setName(parkName);
+            parkRepository.save(park);
+        }
+        return user;
+    }
+
+    public void updatePassword(Long userId, String currentPassword, String newPassword) {
+        User user = getUserById(userId);
+
+        String savedEncryptedPassword = user.getPassword();
+        String salt = user.getSalt();
+
+        String currentPasswordEncrypted = encryptPassword(currentPassword, hexToBytes(salt));
+        if (!savedEncryptedPassword.equals(currentPasswordEncrypted)) {
+            throw new IllegalArgumentException("La contraseña actual es incorrecta.");
+        }
+
+        String newEncryptedPassword = encryptPassword(newPassword, hexToBytes(salt));
+        user.setPassword(newEncryptedPassword);
+        userRepository.save(user);
+    }
+
+    //Es porque los algoritmos de cifrado(como el sha que uso) se representa en formato hexadecimal.
+    public byte[] hexToBytes(String hex) {
+        int len = hex.length();
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            bytes[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return bytes;
+    }
+
+
+    public void resetPark(Long userId) {
+        User user = getUserById(userId);
+        Park park = getParkByUser(user);
+        if (park != null) {
+            park.setCoin(0.0);
+            park.getEnclosures().clear();
+            park.getDinosaurList().clear();
+            parkRepository.save(park);
+        }
+    }
+
+
+
+
 }
