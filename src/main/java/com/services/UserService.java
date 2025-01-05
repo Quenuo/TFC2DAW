@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 //este servicio lo use para crear parke que este asociado al usuario recien creado
 @Service
@@ -71,14 +73,13 @@ public class UserService {
         return parkRepository.findByUser(user);
     }
 
-    public User updateParkName(Long userId, String parkName) {
+    public void updateParkName(Long userId, String parkName) {
         User user = getUserById(userId);
         Park park = getParkByUser(user);
         if (park != null) {
             park.setName(parkName);
             parkRepository.save(park);
         }
-        return user;
     }
 
     public void updatePassword(Long userId, String currentPassword, String newPassword) {
@@ -118,6 +119,42 @@ public class UserService {
             park.getDinosaurList().clear();
             parkRepository.save(park);
         }
+    }
+
+    public void banUser(Long userId, String reason, int durationInDays) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setBanned(true);
+            user.setBanReason(reason);
+            user.setBanExpirationDate(LocalDateTime.now().plusDays(durationInDays));
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    public void unbanUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setBanned(false);
+            user.setBanReason(null);
+            user.setBanExpirationDate(null);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    public boolean isBanned(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getBanned() != null && user.getBanned()
+                    && (user.getBanExpirationDate() == null || user.getBanExpirationDate().isAfter(LocalDateTime.now()));
+        }
+        return false;
     }
 
 

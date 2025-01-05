@@ -52,13 +52,10 @@ public class ProfileController {
 
     @PutMapping("/password")
     public ResponseEntity<String> changePassword(@RequestBody Map<String, String> data, HttpServletRequest request) {
-        // Obtener el userId del token
         String userId = (String) request.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.badRequest().body("No se encontró el ID de usuario en el token.");
         }
-
-        // Validar los datos enviados
         if (!data.containsKey("currentPassword") || !data.containsKey("newPassword")) {
             return ResponseEntity.badRequest().body("Los campos 'currentPassword' y 'newPassword' son obligatorios.");
         }

@@ -80,6 +80,8 @@ public class User {
         return banReason;
     }
 
+
+
     public void setBanReason(String banReason) {
         this.banReason = banReason;
     }
@@ -98,6 +100,18 @@ public class User {
 
     public String getRol() {
         return rol;
+    }
+
+    public LocalDateTime getBanExpirationDate() {
+        return banExpirationDate;
+    }
+
+    public void setBanExpirationDate(LocalDateTime banExpirationDate) {
+        this.banExpirationDate = banExpirationDate;
+    }
+
+    public void setBanned(Boolean banned) {
+        isBanned = banned;
     }
 
     public void setRol(String rol) {
