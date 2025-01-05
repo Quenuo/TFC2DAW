@@ -1,5 +1,7 @@
 package com.util;
 
+import com.model.User;
+import com.services.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,28 +23,25 @@ import java.util.List;
 public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
-
-
+    private final UserService userService;
 
     @Autowired
-    public JwtFilter(JwtUtil jwtUtil){
+    public JwtFilter(JwtUtil jwtUtil, UserService userService){
         this.jwtUtil=jwtUtil;
+        this.userService=userService;
     }
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authHeader = httpRequest.getHeader("Authorization");
-        String path = httpRequest.getRequestURI();
-
-
         if (HttpMethod.OPTIONS.matches(httpRequest.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
-        if ( path.startsWith("/auth")) {
-            chain.doFilter(request, response);
-            return;
-        }
+//        if ( path.startsWith("/auth")) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 //        System.out.println(authHeader+" solicitud desde el fornted");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -50,19 +49,22 @@ public class JwtFilter implements Filter {
             try {
                 String userId=jwtUtil.validateToken(token);
                 httpRequest.setAttribute("userId",userId);
-                //con esto establezco una autotenticacion del usuario para spring de forma manual
-                //con esto arreglo el problema ya que Spring security no me reconocia el token jwt de autenticacion correctamene pare las solicitudes
-                //lo que terminaba en el FilterChainProxy rechazandome las solicitudes
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER"));//con esto crea jna lista de roles para el usuario y se le asigna user
-                //y se le la autorizacion SimpleGrantedAuthority que es solo un permiso para acceder y ya
-                //Tengo que añadirle todavia la logica para el admin
+                User user=userService.getUserById(Long.valueOf(userId));
+                if(user!=null){
+                    //con esto establezco una autotenticacion del usuario para spring de forma manual
+                    //con esto arreglo el problema ya que Spring security no me reconocia el token jwt de autenticacion correctamene pare las solicitudes
+                    //lo que terminaba en el FilterChainProxy rechazandome las solicitudes
+                    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRol().toUpperCase()));
+                    //y se le la autorizacion SimpleGrantedAuthority que es solo un permiso para acceder y ya
+                    //Tengo que añadirle todavia la logica para el admin
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userId, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+
             } catch (Exception e) {
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
-//                System.out.println("Error al validar el token de jwt filter " + e.getMessage()+ " "+token);
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
                 return;
             }
