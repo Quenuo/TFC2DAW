@@ -44,13 +44,13 @@ public class AuthController {
             throw new RuntimeException("No se encontró el email en la base de datos ");
         }
 
-        //De momento no podra iniciar sesion
-        //mas adelante a lo mejor pondre una pantalla para los usuario que hayan sido baneados de manera temporal
-        //y que no pueda iniciar sesion para los usuario que hayan sido baneados para siempre
-        //con esto de momento los baneos ya son permantes debido a que no actualizo e isbannaded=false
-        if (userLogged.getBanned() != null && userLogged.getBanned()) {
-            throw new IllegalArgumentException("El usuario está baneado y no puede iniciar sesión.");
-        }
+//        //De momento no podra iniciar sesion
+//        //mas adelante a lo mejor pondre una pantalla para los usuario que hayan sido baneados de manera temporal
+//        //y que no pueda iniciar sesion para los usuario que hayan sido baneados para siempre
+//        //con esto de momento los baneos ya son permantes debido a que no actualizo e isbannaded=false
+//        if (userLogged.getBanned() != null && userLogged.getBanned()) {
+//            throw new IllegalArgumentException("El usuario está baneado y no puede iniciar sesión.");
+//        }
 
         String savedEncryptedPassword=userLogged.getPassword();
         String savedSalt=userLogged.getSalt();

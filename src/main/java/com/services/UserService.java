@@ -4,6 +4,7 @@ import com.model.Park;
 import com.model.User;
 import com.repository.ParkRepository;
 import com.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,7 +122,7 @@ public class UserService {
         }
     }
 
-    public void banUser(Long userId, String reason, int durationInDays) {
+    public void banUser(Long userId, String reason, long durationInDays) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -155,6 +156,18 @@ public class UserService {
                     && (user.getBanExpirationDate() == null || user.getBanExpirationDate().isAfter(LocalDateTime.now()));
         }
         return false;
+    }
+
+    public void deleteUserById(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("User with ID " + userId + " does not exist.");
+        }
+        Optional<Park> park=parkRepository.findByUser_Id(userId);
+        if(park.isPresent()){
+            parkRepository.deleteById(park.get().getId());
+            userRepository.deleteById(userId);
+        }
+
     }
 
 

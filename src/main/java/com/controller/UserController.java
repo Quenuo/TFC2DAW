@@ -44,11 +44,11 @@ public class UserController {
     @PostMapping("/{userId}/ban")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<String> banUser(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @RequestBody BanResquestDTO banData) {
 
         String reason = banData.getReason();
-        Integer duration = banData.getDuration();
+        Long duration = banData.getDuration();
 
         if (reason == null || duration == null) {
             return ResponseEntity.badRequest().body("Reason and duration are required");
@@ -60,15 +60,21 @@ public class UserController {
 
     @PostMapping("/{userId}/unban")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<String> unbanUser(@PathVariable Long userId) {
+    public ResponseEntity<String> unbanUser(@PathVariable("userId") Long userId) {
         userService.unbanUser(userId);
         return ResponseEntity.ok("User has been unbanned");
     }
 
     @GetMapping("/{userId}/isBanned")
-    public ResponseEntity<Boolean> isBanned(@PathVariable Long userId) {
+    public ResponseEntity<Boolean> isBanned(@PathVariable("userId") Long userId) {
         boolean banned = userService.isBanned(userId);
         return ResponseEntity.ok(banned);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUserById(userId);
+        return ResponseEntity.noContent().build();
     }
 
 }
