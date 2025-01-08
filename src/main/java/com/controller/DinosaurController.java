@@ -1,5 +1,7 @@
 package com.controller;
 
+import com.dto.DinosaurDTO;
+import com.mapper.DinosaurMapper;
 import com.repository.DinosaurRepository;
 import com.model.Dinosaur;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,17 @@ import java.util.List;
 @RequestMapping("/park/dinosaurs")
 public class DinosaurController {
     private final DinosaurRepository dinosaurRepository;
+    private final DinosaurMapper dinosaurMapper;
 
     @Autowired
-    public DinosaurController(DinosaurRepository dinosaurRepository){
+    public DinosaurController(DinosaurRepository dinosaurRepository,DinosaurMapper dinosaurMapper){
         this.dinosaurRepository=dinosaurRepository;
+        this.dinosaurMapper=dinosaurMapper;
     }
 
     @GetMapping
-    public List<Dinosaur> getAllDinosaurs(){
-        return dinosaurRepository.findAll();
+    public List<DinosaurDTO> getAllDinosaurs(){
+        return dinosaurMapper.toDTO(dinosaurRepository.findAll());
+
     }
 }

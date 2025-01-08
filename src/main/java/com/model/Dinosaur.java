@@ -1,9 +1,7 @@
 package com.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.List;
 
 @Entity
 @Table(name = "Dinosaurs")
@@ -71,8 +69,8 @@ public class Dinosaur {
         this.image = image;
     }
 
-    public long getEnclosure() {
-        return enclosure.getId();
+    public Enclousure getEnclosure() {
+        return enclosure;
     }
 
     public void setEnclosure(Enclousure enclosure) {
