@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.DinosaurDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.model.Dinosaur;
 import com.model.Enclousure;
 import com.services.ParkManagentService;
@@ -28,8 +29,11 @@ public class ParkManagentController {
     }
 
     @PostMapping("/dinosaurs")
-    public Dinosaur createDinosaur(@RequestPart("dinosaur") DinosaurDTO dinosaurDTO,
+    public Dinosaur createDinosaur(@RequestPart("dinosaur") String dinosaurData,
                                    @RequestPart("image") MultipartFile image) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DinosaurDTO dinosaurDTO = objectMapper.readValue(dinosaurData, DinosaurDTO.class);
         return parkManagentService.createDinosaur(dinosaurDTO, image);
     }
 
