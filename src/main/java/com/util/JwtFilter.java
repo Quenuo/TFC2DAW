@@ -16,6 +16,8 @@ import org.springframework.http.HttpMethod;
 import java.io.IOException;
 import java.util.List;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 //La uso para validar los tokens enviado por los usuarios desde el frontend,tambien para extraer el id del token  , y almacenarlo
 //para que mis controladores tenga acceso a ese id
 //TODO documentar
@@ -38,11 +40,25 @@ public class JwtFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-//        if ( path.startsWith("/auth")) {
+
+        if (httpRequest.getRequestURI().startsWith("/images/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+//        String requestUri = httpRequest.getRequestURI();
+//
+//        if ( requestUri.startsWith("/auth") ||  requestUri.startsWith("/")) {
+//            System.out.println("Nope");
 //            chain.doFilter(request, response);
 //            return;
 //        }
+//        List<String> publicPaths = List.of("/auth/register", "/auth/login", "/error", "/favicon.ico", "/demo/browser/");
+//        boolean isPublicPath = publicPaths.stream().anyMatch(path::startsWith);
 //        System.out.println(authHeader+" solicitud desde el fornted");
+//        if (isPublicPath) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
