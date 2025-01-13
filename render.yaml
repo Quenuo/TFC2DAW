@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: backend-jurasick
-    dockerfilePath: Dockerfile
-    buildCommand: mvn clean package
-    startCommand: java -jar app.jar
-    runtime: docker
