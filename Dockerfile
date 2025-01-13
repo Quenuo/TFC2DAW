@@ -6,7 +6,6 @@ WORKDIR /app
 RUN mvn clean package
 
 FROM openjdk:21-jdk-slim
-ARG JAR_FILE=target/BackendJurasick-1.0-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+COPY --from=build /app/target/BackendJurasick-1.0-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
