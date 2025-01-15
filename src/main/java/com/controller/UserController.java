@@ -1,10 +1,12 @@
 package com.controller;
 
 import com.dto.BanResquestDTO;
+import com.dto.UserProfileDTO;
 import com.model.User;
 import com.repository.UserRepository;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,13 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
-    public List<User> getUsers(){
-        return userRepository.findAll();
+    public ResponseEntity<List<UserProfileDTO>> getUsers(){
+        try {
+            List<UserProfileDTO> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PutMapping("/{id}/role")

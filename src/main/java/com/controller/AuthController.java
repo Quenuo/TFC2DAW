@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO pasar mensajes de error de autenticacion al frontend
+//TODO ampliaciones alimentacion, muerte por no alimentacion, , mas interrracciones
 @RestController
 @RequestMapping("/auth")
 public class AuthController {

@@ -45,20 +45,7 @@ public class JwtFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-//        String requestUri = httpRequest.getRequestURI();
-//
-//        if ( requestUri.startsWith("/auth") ||  requestUri.startsWith("/")) {
-//            System.out.println("Nope");
-//            chain.doFilter(request, response);
-//            return;
-//        }
-//        List<String> publicPaths = List.of("/auth/register", "/auth/login", "/error", "/favicon.ico", "/demo/browser/");
-//        boolean isPublicPath = publicPaths.stream().anyMatch(path::startsWith);
-//        System.out.println(authHeader+" solicitud desde el fornted");
-//        if (isPublicPath) {
-//            chain.doFilter(request, response);
-//            return;
-//        }
+
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);

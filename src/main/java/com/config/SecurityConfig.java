@@ -36,10 +36,10 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/**").permitAll()
-//                        .requestMatchers("/images/**").permitAll()
-//                        .requestMatchers("/styles.css", "/**.js", "/favicon.ico").permitAll()
-//                        .requestMatchers("/register", "/login","/","/auth/register","/auth/login","/setup","/park","/profile","/park-management").permitAll()
+
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/styles.css", "/**.js", "/favicon.ico").permitAll()
+                        .requestMatchers("/auth/register","/auth/login","/login","/register","/setup","/park","/profile","/banned","/park-management").permitAll()
                         .anyRequest().authenticated()
 
                 )

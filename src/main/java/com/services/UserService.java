@@ -1,5 +1,7 @@
 package com.services;
 
+import com.dto.UserProfileDTO;
+import com.mapper.UserMapper;
 import com.model.Park;
 import com.model.User;
 import com.repository.ParkRepository;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 //este servicio lo use para crear parke que este asociado al usuario recien creado
@@ -18,11 +22,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final ParkRepository parkRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository,ParkRepository parkRepository){
+    public UserService(UserRepository userRepository,ParkRepository parkRepository,UserMapper userMapper){
         this.userRepository=userRepository;
         this.parkRepository=parkRepository;
+        this.userMapper=userMapper;
     }
 
     public User createUserWithPark(String name,String email,String password,byte[] salt){
@@ -68,6 +74,29 @@ public class UserService {
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+    }
+
+    public UserProfileDTO getUserProfileById(Long userId){
+        Optional<User> userOptional=userRepository.findById(userId);
+        if(userOptional.isPresent()){
+            Park park=getParkByUser(userOptional.get());
+
+            return userMapper.toDTO(userOptional.get(),park.getName());
+        }else{
+            throw new RuntimeException("Usuario no encontrado");
+        }
+    }
+
+    public List<UserProfileDTO> getAllUsers(){
+        List<User> userList=userRepository.findAll();
+        List<UserProfileDTO> userProfileDTOS=new ArrayList<>();
+        for(User user:userList){
+            Park park=getParkByUser(user);
+            UserProfileDTO userProfileDTO= userMapper.toDTO(user,park.getName());
+            userProfileDTOS.add(userProfileDTO);
+        }
+        return userProfileDTOS;
+
     }
 
     public Park getParkByUser(User user) {
